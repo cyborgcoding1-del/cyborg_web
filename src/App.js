@@ -4,7 +4,6 @@ import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
 import Services from './components/Services/Services';
-import Industries from './components/Industries/Industries';
 import Workflow from './components/Workflow/Workflow';
 import Portfolio from './components/Portfolio/Portfolio';
 import ContactFooter from './components/ContactFooter/ContactFooter';
@@ -26,7 +25,6 @@ function AppContent() {
       <Hero />
       <Services />
       <Portfolio />
-      <Industries />
       <Workflow />
       <ContactFooter />
     </div>

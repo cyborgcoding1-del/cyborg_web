@@ -123,7 +123,7 @@ export default function ContactFooter() {
 
   const quickLinks = [
     { name: t('nav_services'), id: 'services' },
-    { name: t('nav_industries'), id: 'industries' },
+    { name: t('nav_portfolio'), id: 'portfolio' },
     { name: t('nav_workflow'), id: 'workflow' },
     { name: t('nav_contact'), id: 'contact' },
   ];
