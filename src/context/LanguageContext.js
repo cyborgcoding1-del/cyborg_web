@@ -5,10 +5,28 @@ const translations = {
     // Navbar
     nav_home: 'Home',
     nav_services: 'Our Services',
+    nav_portfolio: 'Products & Systems',
     nav_industries: 'Industries',
     nav_workflow: 'Our Workflow',
     nav_contact: 'Contact Us',
     nav_quote: 'Get a Quote',
+
+    // Portfolio
+    portfolio_badge: 'Enterprise Systems Showcase',
+    portfolio_title: 'Ready Systems & Case Studies',
+    portfolio_subtitle: 'Explore our production-ready enterprise solutions, high-throughput retail ecosystems, and bespoke digital software.',
+    portfolio_filter_all: 'All Systems',
+    portfolio_filter_ready: 'Ready to Deploy',
+    portfolio_filter_pos: 'POS & ERP',
+    portfolio_filter_mobile: 'Mobile Apps',
+    portfolio_filter_web: 'Websites',
+    portfolio_price_tag: 'Price',
+    portfolio_egp: 'EGP',
+    portfolio_ready_badge: 'Ready for Immediate Deployment',
+    portfolio_view_specs: 'View Specs & Screenshots',
+    portfolio_order_now: 'Order This System (40,000 EGP)',
+    portfolio_gallery_title: 'System Screenshots by Category',
+    portfolio_docs_title: 'Full Engineering Documentation',
 
     // Hero
     hero_badge: 'Premier Software Development Agency',
@@ -110,10 +128,28 @@ const translations = {
     // Navbar
     nav_home: 'الرئيسية',
     nav_services: 'خدماتنا',
+    nav_portfolio: 'الأنظمة والأعمال',
     nav_industries: 'الصناعات',
     nav_workflow: 'طريقة عملنا',
     nav_contact: 'اتصل بنا',
     nav_quote: 'اطلب مشروعك',
+
+    // Portfolio
+    portfolio_badge: 'معرض الأنظمة البرمجية المتكاملة',
+    portfolio_title: 'أنظمتنا الجاهزة وسابقة الأعمال',
+    portfolio_subtitle: 'استكشف أنظمتنا الجاهزة للتسليم والتشغيل المباشر، منصات التجزئة الذكية، والبرمجيات المتطورة.',
+    portfolio_filter_all: 'جميع الأنظمة',
+    portfolio_filter_ready: 'أنظمة جاهزة للتسليم',
+    portfolio_filter_pos: 'نقاط البيع و ERP',
+    portfolio_filter_mobile: 'تطبيقات الموبايل',
+    portfolio_filter_web: 'المتاجر والمواقع',
+    portfolio_price_tag: 'السعر',
+    portfolio_egp: 'جنيه مصري',
+    portfolio_ready_badge: 'جاهز للتشغيل والتسليم الفوري',
+    portfolio_view_specs: 'عرض تفاصيل المنظومة ومعرض الصور',
+    portfolio_order_now: 'طلب المنظومة الآن (40,000 ج.م)',
+    portfolio_gallery_title: 'معرض صور المنظومة مقسمة حسب الأقسام',
+    portfolio_docs_title: 'التوثيق الهندسي والمواصفات الكاملة للمنظومة',
 
     // Hero
     hero_badge: 'وكالة تطوير برمجيات متميزة',
