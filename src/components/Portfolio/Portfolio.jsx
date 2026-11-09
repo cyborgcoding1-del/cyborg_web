@@ -120,7 +120,8 @@ const SUPERMARKET_PROJECT = {
   priceEgp: '40,000',
   priceFormattedEn: '40,000 EGP',
   priceFormattedAr: '40,000 جنيه مصري',
-  coverImage: `${process.env.PUBLIC_URL}/projects/supermarket/Website/1.png`,
+  coverImage: `${process.env.PUBLIC_URL}/projects/supermarket/Website/1.webp`,
+  coverThumb: `${process.env.PUBLIC_URL}/projects/supermarket/Website/1_thumb.webp`,
   shortDescriptionEn: 'Complete omnichannel supermarket retail system with 3D Web Storefront, Egyptian AI Voice Assistant, Flutter Desktop POS, Mobile App, Real-Time SQLite WAL Backend, and 1,000 verified Egyptian SKUs.',
   shortDescriptionAr: 'منظومة تجزئة ذكية متكاملة تجمع بين المتجر ثلاثي الأبعاد بالمساعد الصوتي المصري، نقطة بيع الكاشير، تطبيق الموبايل، لوحات إدارة المخازن والفروع، والباك إند اللحظي مع 1000 صنف حقيقي.',
   techStack: [
@@ -155,12 +156,13 @@ export default function Portfolio() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeGalleryTab, setActiveGalleryTab] = useState('Website');
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [coverLoaded, setCoverLoaded] = useState(false);
   const [sectionRef, isInView] = useInView({ threshold: 0.1 });
 
   // Current active gallery items for supermarket
   const currentGalleryGroup = SUPERMARKET_GALLERY[activeGalleryTab] || SUPERMARKET_GALLERY.Website;
 
-  // Flattened images for lightbox navigation
+  // Flattened images for lightbox navigation (using optimized full WebP)
   const allSupermarketImages = Object.keys(SUPERMARKET_GALLERY).flatMap((folderKey) => {
     const group = SUPERMARKET_GALLERY[folderKey];
     return group.images.map((img) => ({
@@ -168,7 +170,8 @@ export default function Portfolio() {
       folder: folderKey,
       folderTitleEn: group.titleEn,
       folderTitleAr: group.titleAr,
-      src: `${process.env.PUBLIC_URL}/projects/supermarket/${folderKey}/${img.file}`
+      src: `${process.env.PUBLIC_URL}/projects/supermarket/${folderKey}/${img.file.replace('.png', '.webp')}`,
+      thumb: `${process.env.PUBLIC_URL}/projects/supermarket/${folderKey}/${img.file.replace('.png', '_thumb.webp')}`
     }));
   });
 
@@ -276,15 +279,32 @@ export default function Portfolio() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
               {/* Left Column: Cover Image Container with Hover Effects */}
               <div 
-                className="lg:col-span-7 relative overflow-hidden cursor-pointer min-h-[320px] sm:min-h-[400px] lg:min-h-[480px] flex items-center justify-center bg-black/70 group"
+                className={`lg:col-span-7 relative overflow-hidden cursor-pointer min-h-[320px] sm:min-h-[400px] lg:min-h-[480px] flex items-center justify-center transition-colors group ${
+                  isDark ? 'bg-[#080C1A]' : 'bg-gray-100'
+                }`}
                 onClick={() => setIsModalOpen(true)}
               >
+                {/* Shimmer loading placeholder */}
+                {!coverLoaded && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyber-cyan/5 via-cyber-cyan/15 to-cyber-cyan/5 animate-pulse flex items-center justify-center z-10">
+                    <div className="flex flex-col items-center gap-2.5 text-cyber-cyan">
+                      <div className="w-8 h-8 border-2 border-cyber-cyan border-t-transparent rounded-full animate-spin" />
+                      <span className="font-orbitron text-xs tracking-widest">{isRTL ? 'جاري التحميل...' : 'LOADING...'}</span>
+                    </div>
+                  </div>
+                )}
+
                 <img
                   src={SUPERMARKET_PROJECT.coverImage}
                   alt="CYBORG Supermarket Cover"
-                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                  loading="eager"
+                  decoding="async"
+                  onLoad={() => setCoverLoaded(true)}
+                  className={`w-full h-full object-cover object-top transition-all duration-700 group-hover:scale-105 ${
+                    coverLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#0d1020]/90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#0d1020]/90 pointer-events-none" />
 
                 {/* Floating Enlarge / Inspect Action Badge on Hover */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-cyber-dark/65 backdrop-blur-xs">
@@ -581,7 +601,7 @@ export default function Portfolio() {
                 {/* SCREENSHOTS GRID */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {currentGalleryGroup.images.map((img) => {
-                    const imageSrc = `${process.env.PUBLIC_URL}/projects/supermarket/${currentGalleryGroup.folder}/${img.file}`;
+                    const thumbSrc = `${process.env.PUBLIC_URL}/projects/supermarket/${currentGalleryGroup.folder}/${img.file.replace('.png', '_thumb.webp')}`;
                     const label = isRTL ? img.labelAr : img.labelEn;
                     return (
                       <div
@@ -597,10 +617,13 @@ export default function Portfolio() {
                           isDark ? 'bg-cyber-darker' : 'bg-gray-100'
                         }`}>
                           <img
-                            src={imageSrc}
+                            src={thumbSrc}
                             alt={label}
                             className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                             loading="lazy"
+                            decoding="async"
+                            width="640"
+                            height="360"
                           />
                           {/* Zoom overlay */}
                           <div className="absolute inset-0 bg-cyber-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2">
