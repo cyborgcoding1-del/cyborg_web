@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Eye, 
   X, 
@@ -215,10 +216,13 @@ export default function Portfolio() {
   const scrollToContact = () => {
     setIsModalOpen(false);
     setLightboxIndex(null);
-    const contactElem = document.getElementById('contact');
-    if (contactElem) {
-      contactElem.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.body.style.overflow = 'unset';
+    setTimeout(() => {
+      const contactElem = document.getElementById('contact');
+      if (contactElem) {
+        contactElem.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 60);
   };
 
   return (
@@ -396,38 +400,62 @@ export default function Portfolio() {
       </div>
 
       {/* ======================================================== */}
-      {/* DETAILED PROJECT MODAL (HIGH Z-INDEX: 100, STICKY HEADER & FOOTER) */}
+      {/* DETAILED PROJECT MODAL (PORTAL TO DOCUMENT.BODY: Z-[9999]) */}
       {/* ======================================================== */}
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md animate-fade-in"
+          className={`fixed inset-0 z-[9999] flex items-center justify-center p-0 sm:p-4 md:p-6 backdrop-blur-md animate-fade-in ${
+            isDark ? 'bg-black/90' : 'bg-black/60'
+          }`}
           onClick={() => setIsModalOpen(false)}
         >
           <div 
-            className="glass-strong rounded-2xl max-w-5xl w-full h-[94vh] max-h-[94vh] flex flex-col border-2 border-cyber-cyan/60 relative shadow-[0_0_80px_rgba(0,240,255,0.4)] text-white overflow-hidden"
+            className={`w-full h-full sm:h-[90vh] sm:max-h-[90vh] sm:max-w-5xl rounded-none sm:rounded-2xl flex flex-col border-0 sm:border-2 relative shadow-2xl overflow-hidden transition-colors duration-300 ${
+              isDark 
+                ? 'bg-[#0B0D1B] border-cyber-cyan/50 text-white shadow-[0_0_80px_rgba(0,240,255,0.25)]' 
+                : 'bg-[#F4F7FC] border-cyan-400 text-gray-900 shadow-2xl'
+            }`}
             onClick={(e) => e.stopPropagation()}
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             {/* STICKY MODAL TOP HEADER */}
-            <div className="flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 border-b border-white/15 bg-[#0a0d1a]/95 flex items-center justify-between z-20 backdrop-blur-md">
+            <div className={`flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between z-20 backdrop-blur-md transition-colors ${
+              isDark
+                ? 'bg-[#0A0C18]/95 border-white/10 text-white'
+                : 'bg-white/95 border-gray-200 text-gray-900 shadow-sm'
+            }`}>
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
-                <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-orbitron font-bold bg-cyber-cyan/20 border border-cyber-cyan text-cyber-cyan uppercase shrink-0">
+                <span className={`px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-orbitron font-bold uppercase shrink-0 ${
+                  isDark
+                    ? 'bg-cyber-cyan/20 border border-cyber-cyan text-cyber-cyan'
+                    : 'bg-cyan-50 border border-cyan-400 text-cyan-800'
+                }`}>
                   {isRTL ? 'منظومة جاهزة' : 'Ready System'}
                 </span>
-                <h3 className="text-sm sm:text-xl font-bold font-orbitron text-white truncate max-w-[170px] sm:max-w-md">
+                <h3 className={`text-sm sm:text-lg font-bold font-orbitron truncate ${
+                  isDark ? 'text-white' : 'text-gray-900'
+                }`}>
                   {isRTL ? 'منظومة سايبورغ سوبرماركت' : 'CYBORG Supermarket Ecosystem'}
                 </h3>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg bg-cyber-cyan/15 border border-cyber-cyan/40">
+              <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                <div className={`hidden sm:flex items-center gap-2 px-3 py-1 rounded-lg border ${
+                  isDark
+                    ? 'bg-cyber-cyan/15 border-cyber-cyan/40 text-cyber-cyan'
+                    : 'bg-cyan-50 border-cyan-300 text-cyan-800'
+                }`}>
                   <Tag className="w-3.5 h-3.5 text-cyber-cyan" />
-                  <span className="font-orbitron font-bold text-cyber-cyan text-sm">40,000 {isRTL ? 'ج.م' : 'EGP'}</span>
+                  <span className="font-orbitron font-bold text-sm">40,000 {isRTL ? 'ج.م' : 'EGP'}</span>
                 </div>
-                {/* Prominent Close Button */}
+                {/* Close Button */}
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="p-2 rounded-full glass border border-white/20 text-gray-300 hover:text-white hover:border-cyber-cyan hover:bg-cyber-cyan/25 transition-all duration-200 cursor-pointer"
+                  className={`p-2 rounded-full border transition-all duration-200 cursor-pointer ${
+                    isDark
+                      ? 'bg-white/5 border-white/20 text-gray-300 hover:text-white hover:border-cyber-cyan hover:bg-cyber-cyan/25'
+                      : 'bg-gray-100 border-gray-300 text-gray-700 hover:text-gray-900 hover:bg-gray-200 hover:border-gray-400'
+                  }`}
                   aria-label="Close modal"
                 >
                   <X className="w-5 h-5" />
@@ -436,28 +464,34 @@ export default function Portfolio() {
             </div>
 
             {/* SCROLLABLE MODAL BODY */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-8">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8">
               {/* Top Highlight Price Banner */}
-              <div className="p-4 sm:p-5 rounded-2xl border-2 border-cyber-cyan bg-gradient-to-r from-cyber-cyan/20 via-cyber-purple/20 to-cyber-cyan/15 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_0_30px_rgba(0,240,255,0.3)]">
+              <div className={`p-4 sm:p-5 rounded-2xl border-2 flex flex-col sm:flex-row items-center justify-between gap-4 transition-colors ${
+                isDark
+                  ? 'border-cyber-cyan bg-gradient-to-r from-cyber-cyan/20 via-cyber-purple/20 to-cyber-cyan/15 shadow-[0_0_30px_rgba(0,240,255,0.3)]'
+                  : 'border-cyan-400 bg-gradient-to-r from-cyan-50 via-purple-50 to-cyan-100 shadow-md'
+              }`}>
                 <div className="text-center sm:text-left">
-                  <div className="text-xs uppercase font-orbitron text-gray-300 tracking-wider">
+                  <div className={`text-xs uppercase font-orbitron tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                     {isRTL ? 'السعر الرسمي للمنظومة بالكامل' : 'Official Full Ecosystem Price'}
                   </div>
                   <div className="flex items-baseline justify-center sm:justify-start gap-2 mt-0.5">
-                    <span className="font-orbitron font-extrabold text-3xl sm:text-4xl text-cyber-cyan drop-shadow-[0_0_15px_rgba(0,240,255,0.8)]">
+                    <span className={`font-orbitron font-extrabold text-3xl sm:text-4xl ${
+                      isDark ? 'text-cyber-cyan drop-shadow-[0_0_15px_rgba(0,240,255,0.8)]' : 'text-cyan-600'
+                    }`}>
                       40,000
                     </span>
-                    <span className="font-orbitron font-bold text-base sm:text-lg text-white">
+                    <span className={`font-orbitron font-bold text-base sm:text-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>
                       {isRTL ? 'جنيه مصري' : 'EGP'}
                     </span>
                   </div>
-                  <p className="text-[11px] text-gray-300 mt-0.5">
+                  <p className={`text-[11px] mt-0.5 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                     {isRTL ? 'يشمل: المتجر 3D، تطبيق الموبايل، كاشير الفروع، الباك إند، 1000 صنف حقيقي، و10 كتب توثيق' : 'Includes: 3D Web, Mobile App, POS Terminal, Core Backend, 1,000 SKUs & 10 PDF Books'}
                   </p>
                 </div>
                 <button
                   onClick={scrollToContact}
-                  className="w-full sm:w-auto px-7 py-3 rounded-xl bg-cyber-cyan text-cyber-dark font-orbitron font-bold text-xs sm:text-sm tracking-wider uppercase hover:shadow-[0_0_25px_rgba(0,240,255,0.9)] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-2.5 sm:px-7 sm:py-3 rounded-xl bg-cyber-cyan text-cyber-dark font-orbitron font-bold text-xs sm:text-sm tracking-wider uppercase hover:shadow-[0_0_25px_rgba(0,240,255,0.9)] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shrink-0"
                 >
                   <ShoppingBag className="w-4 h-4" />
                   <span>{isRTL ? 'طلب المنظومة فوراً (40,000 ج.م)' : 'Purchase System (40,000 EGP)'}</span>
@@ -467,18 +501,30 @@ export default function Portfolio() {
               {/* ======================================================== */}
               {/* SECTION 1: DIVIDED IMAGE GALLERY BY FOLDER (قبل الـ Description) */}
               {/* ======================================================== */}
-              <div className="p-5 sm:p-6 rounded-2xl glass border border-cyber-cyan/40 bg-cyber-darker/80">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-white/10">
+              <div className={`p-4 sm:p-6 rounded-2xl border transition-colors ${
+                isDark
+                  ? 'glass border-cyber-cyan/40 bg-cyber-darker/80'
+                  : 'bg-white border-gray-200 shadow-sm'
+              }`}>
+                <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b ${
+                  isDark ? 'border-white/10' : 'border-gray-200'
+                }`}>
                   <div>
-                    <h4 className="font-orbitron font-bold text-lg sm:text-xl text-cyber-cyan flex items-center gap-2">
-                      <Folder className="w-5 h-5 text-cyber-cyan" />
+                    <h4 className={`font-orbitron font-bold text-base sm:text-xl flex items-center gap-2 ${
+                      isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                    }`}>
+                      <Folder className="w-5 h-5 text-cyber-cyan shrink-0" />
                       <span>{isRTL ? 'معرض شاشات المنظومة (مقسمة حسب المجلدات)' : 'System Screenshots by Folder'}</span>
                     </h4>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className={`text-xs mt-0.5 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       {isRTL ? 'تصفح كافة واجهات المنظومة (36 صورة بدقة عالية) مقسمة تماماً كما في مجلدات المشروع:' : 'Explore all 36 high-resolution system screenshots organized exactly by project directories:'}
                     </p>
                   </div>
-                  <span className="text-xs font-mono px-3 py-1 rounded-full bg-cyber-cyan/15 border border-cyber-cyan/40 text-cyber-cyan font-bold self-start sm:self-auto">
+                  <span className={`text-xs font-mono px-3 py-1 rounded-full font-bold self-start sm:self-auto border ${
+                    isDark
+                      ? 'bg-cyber-cyan/15 border-cyber-cyan/40 text-cyber-cyan'
+                      : 'bg-cyan-50 border-cyan-300 text-cyan-800'
+                  }`}>
                     36 Screenshots / 6 Folders
                   </span>
                 </div>
@@ -494,15 +540,23 @@ export default function Portfolio() {
                         key={folderKey}
                         onClick={() => setActiveGalleryTab(folderKey)}
                         title={title}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-orbitron transition-all duration-200 whitespace-nowrap cursor-pointer border ${
+                        className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-orbitron transition-all duration-200 whitespace-nowrap cursor-pointer border ${
                           isActive
                             ? 'bg-cyber-cyan text-cyber-dark font-bold shadow-[0_0_15px_rgba(0,240,255,0.5)] border-cyber-cyan'
-                            : 'glass text-gray-300 hover:text-white hover:bg-white/10 border-white/15'
+                            : isDark
+                              ? 'glass text-gray-300 hover:text-white hover:bg-white/10 border-white/15'
+                              : 'bg-gray-100 text-gray-700 hover:text-gray-900 hover:bg-gray-200 border-gray-200'
                         }`}
                       >
                         <Folder className="w-3.5 h-3.5" />
                         <span>{folderKey}</span>
-                        <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${isActive ? 'bg-cyber-dark text-cyber-cyan' : 'bg-white/10 text-gray-300'}`}>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                          isActive 
+                            ? 'bg-cyber-dark text-cyber-cyan' 
+                            : isDark 
+                              ? 'bg-white/10 text-gray-300' 
+                              : 'bg-gray-200 text-gray-700'
+                        }`}>
                           {group.count}
                         </span>
                       </button>
@@ -511,11 +565,15 @@ export default function Portfolio() {
                 </div>
 
                 {/* ACTIVE TAB DESCRIPTION */}
-                <div className="mb-4 text-xs font-medium text-gray-300 bg-white/5 p-3 rounded-lg border border-white/10 flex items-center justify-between">
+                <div className={`mb-4 text-xs font-medium p-3 rounded-lg border flex items-center justify-between ${
+                  isDark
+                    ? 'bg-white/5 border-white/10 text-gray-300'
+                    : 'bg-cyan-50/70 border-cyan-200 text-gray-700'
+                }`}>
                   <span>
-                    <strong className="text-cyber-cyan">{activeGalleryTab}:</strong> {isRTL ? currentGalleryGroup.titleAr : currentGalleryGroup.titleEn}
+                    <strong className={isDark ? 'text-cyber-cyan' : 'text-cyan-700'}>{activeGalleryTab}:</strong> {isRTL ? currentGalleryGroup.titleAr : currentGalleryGroup.titleEn}
                   </span>
-                  <span className="text-gray-400 text-[11px] font-mono hidden sm:inline">
+                  <span className={`text-[11px] font-mono hidden sm:inline ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                     {isRTL ? 'انقر على أي صورة لتكبيرها' : 'Click image to open in full Lightbox'}
                   </span>
                 </div>
@@ -529,9 +587,15 @@ export default function Portfolio() {
                       <div
                         key={img.id}
                         onClick={() => handleOpenLightbox(img.file, currentGalleryGroup.folder)}
-                        className="group relative rounded-xl overflow-hidden border border-white/15 hover:border-cyber-cyan bg-black/60 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] flex flex-col justify-between"
+                        className={`group relative rounded-xl overflow-hidden border cursor-pointer transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between ${
+                          isDark
+                            ? 'border-white/15 hover:border-cyber-cyan bg-black/60 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)]'
+                            : 'border-gray-200 hover:border-cyan-500 bg-white hover:shadow-md'
+                        }`}
                       >
-                        <div className="relative aspect-video overflow-hidden bg-cyber-darker flex items-center justify-center">
+                        <div className={`relative aspect-video overflow-hidden flex items-center justify-center ${
+                          isDark ? 'bg-cyber-darker' : 'bg-gray-100'
+                        }`}>
                           <img
                             src={imageSrc}
                             alt={label}
@@ -548,9 +612,13 @@ export default function Portfolio() {
                             </span>
                           </div>
                         </div>
-                        <div className="p-2.5 bg-cyber-darker/90 text-xs flex items-center justify-between gap-2 border-t border-white/10">
-                          <span className="font-mono text-gray-400 text-[11px]">{currentGalleryGroup.folder}/{img.file}</span>
-                          <span className="font-semibold text-gray-200 text-right truncate text-[11px]">{label}</span>
+                        <div className={`p-2.5 text-xs flex items-center justify-between gap-2 border-t ${
+                          isDark
+                            ? 'bg-cyber-darker/90 text-gray-200 border-white/10'
+                            : 'bg-gray-50 text-gray-800 border-gray-200'
+                        }`}>
+                          <span className={`font-mono text-[11px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{currentGalleryGroup.folder}/{img.file}</span>
+                          <span className="font-semibold text-right truncate text-[11px]">{label}</span>
                         </div>
                       </div>
                     );
@@ -561,18 +629,24 @@ export default function Portfolio() {
               {/* ======================================================== */}
               {/* SECTION 2: FULL DESCRIPTION (من ملف الـ README.md)     */}
               {/* ======================================================== */}
-              <div className="space-y-6 pt-4 border-t border-white/10">
-                <div className="flex items-center gap-2 text-cyber-cyan font-orbitron font-bold text-xl sm:text-2xl">
-                  <BookOpen className="w-6 h-6 text-cyber-cyan" />
+              <div className={`space-y-6 pt-4 border-t ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
+                <div className={`flex items-center gap-2 font-orbitron font-bold text-xl sm:text-2xl ${
+                  isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                }`}>
+                  <BookOpen className="w-6 h-6 text-cyber-cyan shrink-0" />
                   <span>{isRTL ? 'التوثيق الشامل ومواصفات المنظومة (System Documentation)' : 'System Specifications & Engineering Documentation'}</span>
                 </div>
 
                 {/* 1. Overview */}
-                <div className="glass p-5 rounded-xl border border-white/10">
-                  <h4 className="font-orbitron font-bold text-cyber-cyan text-base sm:text-lg mb-2">
+                <div className={`p-5 rounded-xl border transition-colors ${
+                  isDark ? 'glass bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-700 shadow-sm'
+                }`}>
+                  <h4 className={`font-orbitron font-bold text-base sm:text-lg mb-2 ${
+                    isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                  }`}>
                     {isRTL ? '🌟 نظرة عامة على المنظومة (Ecosystem Overview)' : '🌟 Ecosystem Overview'}
                   </h4>
-                  <p className="text-sm leading-relaxed text-gray-300">
+                  <p className="text-sm leading-relaxed">
                     {isRTL ? (
                       <>
                         منظومة <strong>سايبورغ سوبرماركت (CYBORG Supermarket)</strong> هي بيئة تجزئة متكاملة تجمع بين فروع السوبرماركت التقليدية على أرض الواقع (Brick-and-Mortar) والتجربة الرقمية الحديثة (Digital Omnichannel). تضمن المنظومة مصدر حقيقة موحد (Single Source of Truth) لقواعد العمل وإدارة المخزون والأسعار وحسابات العملاء، من خلال تكامل لحظي عالي السرعة بين الكاشير، لوحات إدارة الفروع، المتجر الإلكتروني 3D، وتطبيق الموبايل.
@@ -586,12 +660,16 @@ export default function Portfolio() {
                 </div>
 
                 {/* 2. System Architecture */}
-                <div className="glass p-5 rounded-xl border border-white/10">
-                  <h4 className="font-orbitron font-bold text-cyber-cyan text-base sm:text-lg mb-3 flex items-center gap-2">
-                    <Cpu className="w-5 h-5 text-cyber-cyan" />
+                <div className={`p-5 rounded-xl border transition-colors ${
+                  isDark ? 'glass bg-white/5 border-white/10' : 'bg-white border-gray-200 shadow-sm'
+                }`}>
+                  <h4 className={`font-orbitron font-bold text-base sm:text-lg mb-3 flex items-center gap-2 ${
+                    isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                  }`}>
+                    <Cpu className="w-5 h-5 text-cyber-cyan shrink-0" />
                     <span>{isRTL ? '🏛️ معمارية النظام الشاملة (Clean / Onion Architecture)' : '🏛️ Clean Onion System Architecture'}</span>
                   </h4>
-                  <pre className="p-4 rounded-lg bg-black/60 font-mono text-[11px] sm:text-xs text-cyan-300 overflow-x-auto leading-relaxed border border-cyber-cyan/30">
+                  <pre className="p-4 rounded-lg bg-black/85 font-mono text-[11px] sm:text-xs text-cyan-300 overflow-x-auto leading-relaxed border border-cyber-cyan/30">
 {`┌────────────────────────────────────────────────────────────────────────┐
 │                        PRESENTATION LAYER                              │
 │   Web Storefront (3002)  │  Mobile App (Flutter)  │  POS Cashier (Desktop) │
@@ -616,12 +694,16 @@ export default function Portfolio() {
                 {/* 3. The 4 Subsystems Deep-Dive */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Subsystem 1: Web Storefront */}
-                  <div className="glass p-4 rounded-xl border border-white/10">
-                    <h5 className="font-orbitron font-bold text-cyber-cyan text-sm sm:text-base mb-2 flex items-center gap-2">
-                      <Monitor className="w-4 h-4 text-cyber-cyan" />
+                  <div className={`p-4 rounded-xl border transition-colors ${
+                    isDark ? 'glass bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-700 shadow-sm'
+                  }`}>
+                    <h5 className={`font-orbitron font-bold text-sm sm:text-base mb-2 flex items-center gap-2 ${
+                      isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                    }`}>
+                      <Monitor className="w-4 h-4 text-cyber-cyan shrink-0" />
                       <span>1. {isRTL ? 'المتجر الإلكتروني للعملاء (Web Storefront)' : 'Customer Web Storefront'}</span>
                     </h5>
-                    <ul className="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
+                    <ul className="text-xs space-y-1.5 list-disc list-inside">
                       <li>{isRTL ? 'المساعد الصوتي والذكاء الاصطناعي المصري (WebGL 3D Voice Orb يفهم العامية المصرية).' : 'Egyptian AI Voice Assistant in 3D WebGL Orb understanding colloquial Egyptian Arabic.'}</li>
                       <li>{isRTL ? 'كتالوج التجزئة الحي يضم 1,000 صنف مع حماية النفاذ من المخزون آلياً.' : '1,000 verified SKUs catalog with automatic Out-of-Stock guard.'}</li>
                       <li>{isRTL ? 'محاكي بطاقة بنكية ثلاثي الأبعاد مع حساب ضريبة القيمة المضافة 14% وفاتورة رسمية.' : '3D interactive bank card simulation, 14% VAT calculation & printable receipts.'}</li>
@@ -630,12 +712,16 @@ export default function Portfolio() {
                   </div>
 
                   {/* Subsystem 2: POS Cashier & Admin */}
-                  <div className="glass p-4 rounded-xl border border-white/10">
-                    <h5 className="font-orbitron font-bold text-cyber-cyan text-sm sm:text-base mb-2 flex items-center gap-2">
-                      <Terminal className="w-4 h-4 text-cyber-cyan" />
+                  <div className={`p-4 rounded-xl border transition-colors ${
+                    isDark ? 'glass bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-700 shadow-sm'
+                  }`}>
+                    <h5 className={`font-orbitron font-bold text-sm sm:text-base mb-2 flex items-center gap-2 ${
+                      isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                    }`}>
+                      <Terminal className="w-4 h-4 text-cyber-cyan shrink-0" />
                       <span>2. {isRTL ? 'كاشير ولوحة تحكم الفروع (Flutter POS)' : 'Branch POS & Operations (Flutter)'}</span>
                     </h5>
-                    <ul className="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
+                    <ul className="text-xs space-y-1.5 list-disc list-inside">
                       <li>{isRTL ? 'كاشير فائق السرعة يدعم الباركود EAN-13 واختصارات الكيبورد (F2 نقد / F3 بطاقة).' : 'Sub-second checkout with barcode scanner & F2/F3 fast keyboard shortcuts.'}</li>
                       <li>{isRTL ? 'نافذة اقتراح البدائل الذكية (Smart Replacement Dialog) عند نقص الأصناف.' : 'Smart replacement modal suggesting in-stock alternatives dynamically.'}</li>
                       <li>{isRTL ? 'مراقبة الورديات ومؤشرات المبيعات وتنبيهات انخفاض المخزون وإدارة الشكاوى.' : 'Shift reconciliation, sales KPIs, low-stock alerts & complaints triage.'}</li>
@@ -644,12 +730,16 @@ export default function Portfolio() {
                   </div>
 
                   {/* Subsystem 3: Mobile App */}
-                  <div className="glass p-4 rounded-xl border border-white/10">
-                    <h5 className="font-orbitron font-bold text-cyber-cyan text-sm sm:text-base mb-2 flex items-center gap-2">
-                      <Smartphone className="w-4 h-4 text-cyber-cyan" />
+                  <div className={`p-4 rounded-xl border transition-colors ${
+                    isDark ? 'glass bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-700 shadow-sm'
+                  }`}>
+                    <h5 className={`font-orbitron font-bold text-sm sm:text-base mb-2 flex items-center gap-2 ${
+                      isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                    }`}>
+                      <Smartphone className="w-4 h-4 text-cyber-cyan shrink-0" />
                       <span>3. {isRTL ? 'تطبيق الموبايل للتسوق (Customer Mobile App)' : 'Customer Mobile App'}</span>
                     </h5>
-                    <ul className="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
+                    <ul className="text-xs space-y-1.5 list-disc list-inside">
                       <li>{isRTL ? 'مساعد صوتي متكامل للهواتف الذكية بالعامية المصرية.' : 'Mobile-optimized voice assistant in Egyptian dialect.'}</li>
                       <li>{isRTL ? 'سلة العائلة الذكية وتحديد سقف الميزانية وحظر التجاوز.' : 'Shared family cart with customizable budget spending limits.'}</li>
                       <li>{isRTL ? 'المؤن الذكية وإعادة التزويد الدوري للسلع الاستهلاكية المعتادة.' : 'Smart pantry auto-replenishment based on historic consumption.'}</li>
@@ -658,12 +748,16 @@ export default function Portfolio() {
                   </div>
 
                   {/* Subsystem 4: Central WAL Backend */}
-                  <div className="glass p-4 rounded-xl border border-white/10">
-                    <h5 className="font-orbitron font-bold text-cyber-cyan text-sm sm:text-base mb-2 flex items-center gap-2">
-                      <Database className="w-4 h-4 text-cyber-cyan" />
+                  <div className={`p-4 rounded-xl border transition-colors ${
+                    isDark ? 'glass bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-700 shadow-sm'
+                  }`}>
+                    <h5 className={`font-orbitron font-bold text-sm sm:text-base mb-2 flex items-center gap-2 ${
+                      isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                    }`}>
+                      <Database className="w-4 h-4 text-cyber-cyan shrink-0" />
                       <span>4. {isRTL ? 'الخادم المركزي والباك إند المتزامن' : 'Central Backend & WAL Sync'}</span>
                     </h5>
-                    <ul className="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
+                    <ul className="text-xs space-y-1.5 list-disc list-inside">
                       <li>{isRTL ? 'محرك SQLite بنمط WAL مع مهلة 10 ثوانٍ وحماية قفل التزامن (Zero DB Lock).' : 'SQLite3 WAL engine with 10s timeout preventing database locks under load.'}</li>
                       <li>{isRTL ? 'بوابة بث الأحداث الحية (SSE) ونقطة ابتلاع المعاملات الأوفلاين /sync/ingest.' : 'SSE broadcasting gateway and offline transaction ingestion queue.'}</li>
                       <li>{isRTL ? 'محرك حجز المخزون والتحقق المزدوج قبل خصم أو تأكيد أي أوردر.' : 'Two-phase inventory reservation guard protecting against negative stock.'}</li>
@@ -673,48 +767,66 @@ export default function Portfolio() {
                 </div>
 
                 {/* 4. Real Dataset Breakdown */}
-                <div className="glass p-5 rounded-xl border border-white/10">
-                  <h4 className="font-orbitron font-bold text-cyber-cyan text-base sm:text-lg mb-3">
+                <div className={`p-5 rounded-xl border transition-colors ${
+                  isDark ? 'glass bg-white/5 border-white/10' : 'bg-white border-gray-200 shadow-sm'
+                }`}>
+                  <h4 className={`font-orbitron font-bold text-base sm:text-lg mb-3 ${
+                    isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                  }`}>
                     {isRTL ? '📊 كتالوج المنتجات الحقيقي (Real Dataset Integration - 1,000 SKUs)' : '📊 Real Dataset Integration (1,000 Verified SKUs)'}
                   </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
-                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div className={`p-3 rounded-lg border transition-colors ${
+                      isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'
+                    }`}>
                       <div className="font-orbitron font-bold text-cyber-cyan text-lg">309</div>
-                      <div className="text-[11px] text-gray-300 mt-1">{isRTL ? 'البقالة والمؤن' : 'Food Cupboard'}</div>
+                      <div className="text-[11px] mt-1">{isRTL ? 'البقالة والمؤن' : 'Food Cupboard'}</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div className={`p-3 rounded-lg border transition-colors ${
+                      isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'
+                    }`}>
                       <div className="font-orbitron font-bold text-cyber-cyan text-lg">292</div>
-                      <div className="text-[11px] text-gray-300 mt-1">{isRTL ? 'المشروبات والعصائر' : 'Beverages'}</div>
+                      <div className="text-[11px] mt-1">{isRTL ? 'المشروبات والعصائر' : 'Beverages'}</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div className={`p-3 rounded-lg border transition-colors ${
+                      isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'
+                    }`}>
                       <div className="font-orbitron font-bold text-cyber-cyan text-lg">199</div>
-                      <div className="text-[11px] text-gray-300 mt-1">{isRTL ? 'الألبان والأجبان' : 'Fresh Dairy'}</div>
+                      <div className="text-[11px] mt-1">{isRTL ? 'الألبان والأجبان' : 'Fresh Dairy'}</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div className={`p-3 rounded-lg border transition-colors ${
+                      isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'
+                    }`}>
                       <div className="font-orbitron font-bold text-cyber-cyan text-lg">160</div>
-                      <div className="text-[11px] text-gray-300 mt-1">{isRTL ? 'الخضار والفاكهة' : 'Produce & Veg'}</div>
+                      <div className="text-[11px] mt-1">{isRTL ? 'الخضار والفاكهة' : 'Produce & Veg'}</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div className={`p-3 rounded-lg border transition-colors ${
+                      isDark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-50 border-gray-200 text-gray-700'
+                    }`}>
                       <div className="font-orbitron font-bold text-cyber-cyan text-lg">40</div>
-                      <div className="text-[11px] text-gray-300 mt-1">{isRTL ? 'المجمدات' : 'Frozen Food'}</div>
+                      <div className="text-[11px] mt-1">{isRTL ? 'المجمدات' : 'Frozen Food'}</div>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-400 mt-3 text-center">
+                  <p className={`text-xs mt-3 text-center ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     {isRTL ? 'أكثر من 140 علامة تجارية مصرية معتمدة (جهينة، مزارع دينا، المراعي، دومتي، لمار، هارفست، دريم، شيبسي، كوكاكولا) بالجنيه المصري (EGP).' : 'Features 140+ real Egyptian market brands with barcode, category, prices and stock.'}
                   </p>
                 </div>
 
                 {/* 5. PDF Books & Automated Tests */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="glass p-4 rounded-xl border border-white/10">
-                    <h5 className="font-orbitron font-bold text-cyber-cyan text-sm mb-2 flex items-center gap-2">
-                      <BookOpen className="w-4 h-4 text-cyber-cyan" />
+                  <div className={`p-4 rounded-xl border transition-colors ${
+                    isDark ? 'glass bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-700 shadow-sm'
+                  }`}>
+                    <h5 className={`font-orbitron font-bold text-sm mb-2 flex items-center gap-2 ${
+                      isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                    }`}>
+                      <BookOpen className="w-4 h-4 text-cyber-cyan shrink-0" />
                       <span>{isRTL ? '📚 10 كتب توثيق هندسي معتمدة' : '📚 10 Enterprise PDF Manuals'}</span>
                     </h5>
-                    <p className="text-xs text-gray-300 mb-2">
+                    <p className="text-xs mb-2">
                       {isRTL ? 'تتضمن حزمة المشروع 10 كتب PDF شاملة للمشروع:' : 'Comprehensive PDF engineering guides included:'}
                     </p>
-                    <ul className="text-[11px] text-gray-400 space-y-1 font-mono">
+                    <ul className={`text-[11px] space-y-1 font-mono ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       <li>• 01_Cyborg_Complete_Project_Handbook.pdf</li>
                       <li>• 02_System_Architecture_and_Infrastructure.pdf</li>
                       <li>• 03_Complete_Workflows_and_Sequence_Diagrams.pdf</li>
@@ -728,15 +840,19 @@ export default function Portfolio() {
                     </ul>
                   </div>
 
-                  <div className="glass p-4 rounded-xl border border-white/10">
-                    <h5 className="font-orbitron font-bold text-cyber-cyan text-sm mb-2 flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <div className={`p-4 rounded-xl border transition-colors ${
+                    isDark ? 'glass bg-white/5 border-white/10 text-gray-300' : 'bg-white border-gray-200 text-gray-700 shadow-sm'
+                  }`}>
+                    <h5 className={`font-orbitron font-bold text-sm mb-2 flex items-center gap-2 ${
+                      isDark ? 'text-cyber-cyan' : 'text-cyan-700'
+                    }`}>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                       <span>{isRTL ? '🧪 اختبارات الجودة (8 أجنحة / 60 فحص ناجح)' : '🧪 Automated Testing (100% Passed)'}</span>
                     </h5>
-                    <p className="text-xs text-gray-300 mb-2">
+                    <p className="text-xs mb-2">
                       {isRTL ? 'اجتازت المنظومة بنجاح تام 8 أجنحة اختبارات صارمة:' : 'All test suites successfully passed:'}
                     </p>
-                    <ul className="text-xs text-gray-300 space-y-1.5">
+                    <ul className="text-xs space-y-1.5">
                       <li className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                         <span>{isRTL ? 'أمان الكتالوج والباركود المزدوج (1,000 صنف)' : 'Catalog SKU & Barcode integrity'}</span>
@@ -764,70 +880,96 @@ export default function Portfolio() {
             </div>
 
             {/* STICKY MODAL BOTTOM BAR (ALWAYS VISIBLE - NEVER HIDDEN) */}
-            <div className="flex-shrink-0 px-5 py-4 border-t-2 border-cyber-cyan/50 bg-[#090c1a] flex flex-col sm:flex-row items-center justify-between gap-3 z-20 shadow-2xl backdrop-blur-lg">
-              <div className="flex items-baseline gap-2">
-                <span className="text-xs font-orbitron text-gray-300 font-bold">{isRTL ? 'السعر الشامل للمنظومة:' : 'Total System Price:'}</span>
-                <span className="font-orbitron font-extrabold text-2xl sm:text-3xl text-cyber-cyan drop-shadow-[0_0_12px_rgba(0,240,255,0.7)]">
-                  40,000 {isRTL ? 'جنيه مصري' : 'EGP'}
-                </span>
-                <span className="text-[10px] text-emerald-400 font-mono hidden md:inline font-bold">
-                  ({isRTL ? 'شامل السورس كود وقاعدة البيانات والدعم' : 'Turnkey Full Delivery'})
-                </span>
-              </div>
+            <div className={`flex-shrink-0 px-4 sm:px-6 py-2.5 sm:py-3.5 border-t z-20 shadow-2xl backdrop-blur-lg transition-colors ${
+              isDark
+                ? 'bg-[#090C1A] border-cyber-cyan/40 text-white'
+                : 'bg-white border-cyan-400/50 text-gray-900 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]'
+            }`}>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-2">
+                  <span className={`text-[10px] sm:text-xs font-orbitron font-bold ${
+                    isDark ? 'text-gray-300' : 'text-gray-600'
+                  }`}>
+                    {isRTL ? 'إجمالي السعر:' : 'Total Price:'}
+                  </span>
+                  <div className="flex items-baseline gap-1">
+                    <span className={`font-orbitron font-extrabold text-xl sm:text-2xl ${
+                      isDark
+                        ? 'text-cyber-cyan drop-shadow-[0_0_12px_rgba(0,240,255,0.7)]'
+                        : 'text-cyan-600'
+                    }`}>
+                      40,000
+                    </span>
+                    <span className={`font-orbitron font-bold text-xs sm:text-sm ${
+                      isDark ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      {isRTL ? 'جنيه' : 'EGP'}
+                    </span>
+                    <span className="text-[10px] text-emerald-500 font-mono hidden md:inline font-bold">
+                      ({isRTL ? 'شامل السورس كود والدعم' : 'Turnkey Full Delivery'})
+                    </span>
+                  </div>
+                </div>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto">
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl border border-white/20 text-gray-300 hover:text-white hover:bg-white/10 font-orbitron text-xs tracking-wider uppercase transition-colors cursor-pointer"
-                >
-                  {isRTL ? 'إغلاق' : 'Close'}
-                </button>
-                <button
-                  onClick={scrollToContact}
-                  className="flex-1 sm:flex-none px-8 py-2.5 rounded-xl bg-cyber-cyan text-cyber-dark font-orbitron font-extrabold text-xs tracking-wider uppercase hover:shadow-[0_0_25px_rgba(0,240,255,0.9)] hover:scale-105 transition-all cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>{isRTL ? 'طلب المنظومة الآن (40,000 ج.م)' : 'Order System (40,000 EGP)'}</span>
-                </button>
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className={`px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl border font-orbitron text-xs tracking-wider uppercase transition-colors cursor-pointer ${
+                      isDark
+                        ? 'border-white/20 text-gray-300 hover:text-white hover:bg-white/10'
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
+                  >
+                    {isRTL ? 'إغلاق' : 'Close'}
+                  </button>
+                  <button
+                    onClick={scrollToContact}
+                    className="px-4 py-2 sm:px-6 sm:py-2.5 rounded-xl bg-cyber-cyan text-cyber-dark font-orbitron font-extrabold text-xs tracking-wider uppercase hover:shadow-[0_0_25px_rgba(0,240,255,0.9)] hover:scale-105 transition-all cursor-pointer flex items-center justify-center gap-1.5 shrink-0"
+                  >
+                    <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
+                    <span>{isRTL ? 'طلب الآن' : 'Order Now'}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ======================================================== */}
-      {/* FULLSCREEN LIGHTBOX IMAGE VIEWER (Z-INDEX: 110)        */}
+      {/* FULLSCREEN LIGHTBOX IMAGE VIEWER (PORTAL TO DOCUMENT.BODY) */}
       {/* ======================================================== */}
-      {lightboxIndex !== null && allSupermarketImages[lightboxIndex] && (
+      {lightboxIndex !== null && allSupermarketImages[lightboxIndex] && createPortal(
         <div 
-          className="fixed inset-0 z-[110] flex items-center justify-center p-2 sm:p-4 bg-black/95 backdrop-blur-lg animate-fade-in"
+          className="fixed inset-0 z-[10000] flex items-center justify-center p-2 sm:p-4 bg-black/95 backdrop-blur-lg animate-fade-in"
           onClick={() => setLightboxIndex(null)}
         >
           {/* Lightbox Close Button */}
           <button
             onClick={() => setLightboxIndex(null)}
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 p-3 rounded-full bg-black/80 border border-white/30 text-white hover:text-cyber-cyan hover:border-cyber-cyan transition-colors z-50 cursor-pointer shadow-xl"
+            className="absolute top-3 right-3 sm:top-6 sm:right-6 p-2.5 sm:p-3 rounded-full bg-black/80 border border-white/30 text-white hover:text-cyber-cyan hover:border-cyber-cyan transition-colors z-50 cursor-pointer shadow-xl"
             aria-label="Close Lightbox"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
           {/* Previous Button */}
           <button
             onClick={handlePrevLightbox}
-            className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 p-3 sm:p-4 rounded-full bg-black/80 border border-white/30 text-white hover:text-cyber-cyan hover:border-cyber-cyan transition-all z-50 cursor-pointer shadow-xl"
+            className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 p-2.5 sm:p-4 rounded-full bg-black/80 border border-white/30 text-white hover:text-cyber-cyan hover:border-cyber-cyan transition-all z-50 cursor-pointer shadow-xl"
             aria-label="Previous image"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
           {/* Next Button */}
           <button
             onClick={handleNextLightbox}
-            className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 p-3 sm:p-4 rounded-full bg-black/80 border border-white/30 text-white hover:text-cyber-cyan hover:border-cyber-cyan transition-all z-50 cursor-pointer shadow-xl"
+            className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 p-2.5 sm:p-4 rounded-full bg-black/80 border border-white/30 text-white hover:text-cyber-cyan hover:border-cyber-cyan transition-all z-50 cursor-pointer shadow-xl"
             aria-label="Next image"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
           {/* Image & Caption Container */}
@@ -853,7 +995,8 @@ export default function Portfolio() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   );
