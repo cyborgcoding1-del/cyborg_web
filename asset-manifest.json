@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/cyborg_web/static/css/main.732230f7.css",
+    "main.js": "/cyborg_web/static/js/main.d5daae54.js",
+    "index.html": "/cyborg_web/index.html",
+    "main.732230f7.css.map": "/cyborg_web/static/css/main.732230f7.css.map",
+    "main.d5daae54.js.map": "/cyborg_web/static/js/main.d5daae54.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.732230f7.css",
+    "static/js/main.d5daae54.js"
+  ]
+}
