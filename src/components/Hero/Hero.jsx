@@ -24,7 +24,7 @@ const Hero = () => {
       icon: ShieldCheck,
     },
     {
-      value: 'Coming Soon',
+      value: '4+',
       label: t('hero_stat_industries'),
       icon: Layers,
     },

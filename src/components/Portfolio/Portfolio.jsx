@@ -343,7 +343,7 @@ export default function Portfolio() {
 
                   {/* PROMINENT PRICE HERO BOX */}
                   <div className="p-4 rounded-xl border-2 border-cyber-cyan bg-gradient-to-r from-cyber-cyan/20 via-cyber-purple/20 to-cyber-cyan/15 mb-6 shadow-[0_0_30px_rgba(0,240,255,0.25)]">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div>
                         <div className="text-[11px] uppercase tracking-wider font-orbitron text-gray-300 font-bold flex items-center gap-1.5">
                           <Tag className="w-3.5 h-3.5 text-cyber-cyan" />
@@ -358,7 +358,7 @@ export default function Portfolio() {
                           </span>
                         </div>
                       </div>
-                      <div className="text-right">
+                      <div className="sm:text-right">
                         <span className="inline-block px-3 py-1 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[11px] font-mono font-bold">
                           {isRTL ? 'تسليم فوري متكامل' : 'Turnkey Delivery'}
                         </span>
@@ -409,12 +409,12 @@ export default function Portfolio() {
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             {/* STICKY MODAL TOP HEADER */}
-            <div className="flex-shrink-0 px-5 py-4 border-b border-white/15 bg-[#0a0d1a]/95 flex items-center justify-between z-20 backdrop-blur-md">
-              <div className="flex items-center gap-3">
-                <span className="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-orbitron font-bold bg-cyber-cyan/20 border border-cyber-cyan text-cyber-cyan uppercase">
+            <div className="flex-shrink-0 px-4 sm:px-5 py-3 sm:py-4 border-b border-white/15 bg-[#0a0d1a]/95 flex items-center justify-between z-20 backdrop-blur-md">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
+                <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-orbitron font-bold bg-cyber-cyan/20 border border-cyber-cyan text-cyber-cyan uppercase shrink-0">
                   {isRTL ? 'منظومة جاهزة' : 'Ready System'}
                 </span>
-                <h3 className="text-base sm:text-xl font-bold font-orbitron text-white truncate max-w-[200px] sm:max-w-md">
+                <h3 className="text-sm sm:text-xl font-bold font-orbitron text-white truncate max-w-[170px] sm:max-w-md">
                   {isRTL ? 'منظومة سايبورغ سوبرماركت' : 'CYBORG Supermarket Ecosystem'}
                 </h3>
               </div>
